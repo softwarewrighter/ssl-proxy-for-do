@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  ssl-proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+    image: ssl-proxy:latest
+    container_name: ssl-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      # Domain configuration
+      - DOMAIN=codingtech.info
+      - EMAIL=admin@codingtech.info
+      - STAGING=false  # Set to true for Let's Encrypt staging (testing)
+
+      # Crudibase configuration
+      - ENABLE_CRUDIBASE=true
+      - CRUDIBASE_BACKEND_HOST=crudibase-backend
+      - CRUDIBASE_BACKEND_PORT=3001
+      - CRUDIBASE_FRONTEND_HOST=crudibase-frontend
+      - CRUDIBASE_FRONTEND_PORT=3000
+
+      # Cruditrack configuration
+      - ENABLE_CRUDITRACK=true
+      - CRUDITRACK_BACKEND_HOST=cruditrack-backend
+      - CRUDITRACK_BACKEND_PORT=3101
+      - CRUDITRACK_FRONTEND_HOST=cruditrack-frontend
+      - CRUDITRACK_FRONTEND_PORT=3100
+    volumes:
+      # Persist SSL certificates
+      - letsencrypt:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+      - ./logs:/var/log/nginx
+    networks:
+      - crudibase-network
+      - cruditrack-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  letsencrypt:
+    driver: local
+  certbot-www:
+    driver: local
+
+networks:
+  # Connect to existing app networks
+  crudibase-network:
+    external: true
+  cruditrack-network:
+    external: true

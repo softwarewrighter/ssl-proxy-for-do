@@ -1,0 +1,21 @@
+# Health check endpoint
+server {
+    listen 80;
+    server_name _;
+
+    location /health {
+        access_log off;
+        return 200 "healthy\n";
+        add_header Content-Type text/plain;
+    }
+
+    # Let's Encrypt challenge location
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    # Default redirect to HTTPS (will be overridden by specific configs)
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
