@@ -135,6 +135,36 @@ curl -I https://cruditrack.codingtech.info
 # https://cruditrack.codingtech.info
 ```
 
+## ⚠️ IMPORTANT: Secure Application Ports
+
+Your apps are now accessible via HTTPS, but they're still exposed on direct ports (e.g., `http://YOUR_IP:3000`). This is a **security risk**!
+
+**Fix immediately**:
+
+```bash
+# Edit application docker-compose files to remove port mappings
+cd /opt/crudibase
+nano docker-compose.yml
+# Comment out or remove all "ports:" sections
+
+cd /opt/cruditrack
+nano docker-compose.yml
+# Comment out or remove all "ports:" sections
+
+# Restart applications
+cd /opt/crudibase && docker compose down && docker compose up -d
+cd /opt/cruditrack && docker compose down && docker compose up -d
+
+# Verify ports are no longer accessible
+curl -m 5 http://YOUR_DROPLET_IP:3000 || echo "✅ Port 3000 secured"
+curl -m 5 http://YOUR_DROPLET_IP:3100 || echo "✅ Port 3100 secured"
+
+# Verify HTTPS still works
+curl -I https://crudibase.codingtech.info
+```
+
+**See [SECURITY-HARDENING.md](docs/SECURITY-HARDENING.md) for complete security guide.**
+
 ## Troubleshooting
 
 **DNS not resolving?**
