@@ -107,16 +107,16 @@ sequenceDiagram
 
     Dev->>Script: Execute ./scripts/build-and-push.sh
 
-    Note over Script: Load environment variables
+ Note over Script: Load environment variables
 
-    Script->>Script: Check prerequisites<br/>- Docker running?<br/>- doctl installed?
+    Script->>Script: Check prerequisites - Docker running? - doctl installed?
 
     Script->>Docker: doctl registry login
-    Note over Docker: Authenticate with<br/>DigitalOcean registry
+ Note over Docker: Authenticate with DigitalOcean registry
 
-    Script->>Docker: docker buildx build<br/>--platform linux/amd64<br/>--tag registry.../ssl-proxy:latest<br/>--push
+    Script->>Docker: docker buildx build --platform linux/amd64 --tag registry.../ssl-proxy:latest --push
 
-    Note over Docker: Multi-stage build process
+ Note over Docker: Multi-stage build process
 
     Docker->>Docker: FROM nginx:1.25-alpine
     Docker->>Docker: Install certbot + dependencies
@@ -131,7 +131,7 @@ sequenceDiagram
     Docker-->>Script: Build successful
 
     Script->>Script: Verify image in registry
-    Script-->>Dev: ✅ Successfully built and pushed:<br/>registry.../ssl-proxy:latest
+    Script-->>Dev: ✅ Successfully built and pushed: registry.../ssl-proxy:latest
 ```
 
 ### Build Script (`scripts/build-and-push.sh`)
@@ -261,21 +261,21 @@ sequenceDiagram
     participant Docker as Docker Client
     participant Registry as Container Registry
 
-    Note over CLI: doctl registry login
+ Note over CLI: doctl registry login
 
     CLI->>API: GET /v2/registry/docker-credentials
-    Note over API: Verify API token
+ Note over API: Verify API token
 
-    API-->>CLI: Return Docker credentials<br/>{username, password, server}
+    API-->>CLI: Return Docker credentials {username, password, server}
 
-    CLI->>Docker: docker login registry.digitalocean.com<br/>--username <token><br/>--password <password>
+    CLI->>Docker: docker login registry.digitalocean.com --username <token> --password <password>
 
     Docker->>Registry: Authenticate
     Registry-->>Docker: Authentication successful
 
     Docker-->>CLI: Login Succeeded
 
-    Note over Docker,Registry: Can now push/pull images
+ Note over Docker,Registry: Can now push/pull images
 ```
 
 ### Image Layers and Pushing
@@ -340,7 +340,7 @@ sequenceDiagram
     participant LE as Let's Encrypt
 
     Admin->>Droplet: SSH to droplet
-    Note over Admin,Droplet: ssh root@123.45.67.89
+ Note over Admin,Droplet: ssh root@123.45.67.89
 
     Admin->>Droplet: Navigate to /opt/ssl-proxy
     Admin->>Docker: doctl registry login
@@ -359,7 +359,7 @@ sequenceDiagram
     Docker->>Container: Start container
     Container->>Container: Execute /entrypoint.sh
 
-    Note over Container: Entrypoint Process
+ Note over Container: Entrypoint Process
 
     Container->>Container: Process nginx templates
     Container->>Container: Test nginx config
@@ -380,7 +380,7 @@ sequenceDiagram
     Container-->>Admin: Container running
 
     Admin->>Container: docker logs ssl-proxy
-    Container-->>Admin: Show logs:<br/>✅ Certificate obtained<br/>✅ SSL Proxy Started
+    Container-->>Admin: Show logs: ✅ Certificate obtained ✅ SSL Proxy Started
 
     Admin->>Container: curl https://crudibase.../
     Container-->>Admin: 200 OK (HTTPS working)
@@ -588,7 +588,7 @@ sequenceDiagram
     participant Docker as Docker
     participant Registry as DO Registry
 
-    Note over Admin: New deployment has issues
+ Note over Admin: New deployment has issues
 
     Admin->>Admin: Identify previous working version
 
@@ -610,7 +610,7 @@ sequenceDiagram
     Admin->>Docker: Verify rollback
     Docker-->>Admin: Container running with old version
 
-    Note over Admin: System restored to previous state
+ Note over Admin: System restored to previous state
 ```
 
 ### Rollback Commands

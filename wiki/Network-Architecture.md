@@ -224,12 +224,12 @@ sequenceDiagram
     participant Backend as crudibase-backend
 
     Nginx->>DNS: Resolve "crudibase-backend"
-    Note over DNS: Lookup in crudibase-network
+ Note over DNS: Lookup in crudibase-network
 
-    DNS->>DNS: Find container with name<br/>"crudibase-backend"
+    DNS->>DNS: Find container with name "crudibase-backend"
     DNS-->>Nginx: IP: 172.18.0.4
 
-    Nginx->>Backend: HTTP GET /<br/>to 172.18.0.4:3001
+    Nginx->>Backend: HTTP GET / to 172.18.0.4:3001
     Backend-->>Nginx: HTTP 200 OK
 ```
 
@@ -431,8 +431,8 @@ sequenceDiagram
     participant Target as Target Container
 
     App->>DNS: Resolve "crudibase-backend"
-    DNS->>DNS: Search in connected networks<br/>(crudibase-network)
-    DNS->>DNS: Find container "crudibase-backend"<br/>IP: 172.18.0.4
+    DNS->>DNS: Search in connected networks (crudibase-network)
+    DNS->>DNS: Find container "crudibase-backend" IP: 172.18.0.4
     DNS-->>App: Return 172.18.0.4
     App->>Target: Connect to 172.18.0.4:3001
 ```
