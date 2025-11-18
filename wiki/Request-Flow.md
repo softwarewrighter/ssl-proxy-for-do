@@ -145,22 +145,22 @@ X-XSS-Protection: 1; mode=block
 ```mermaid
 sequenceDiagram
     participant Client as Client Browser
-    participant SSLProxy as SSL Proxy (Nginx Port 80)
+    participant SSLProxy as SSL Proxy (Port 80)
 
-    Note over Client: User navigates to<br/>http://crudibase.codingtech.info
+    Note over Client: User navigates to HTTP URL
 
-    Client->>SSLProxy: GET / HTTP/1.1<br/>Host: crudibase.codingtech.info
+    Client->>SSLProxy: GET / HTTP/1.1
 
-    SSLProxy->>SSLProxy: Match server block for<br/>crudibase.codingtech.info:80
+    SSLProxy->>SSLProxy: Match server block
 
-    Note over SSLProxy: Nginx configuration:<br/>return 301 https://$host$request_uri;
+    Note over SSLProxy: Return 301 redirect to HTTPS
 
-    SSLProxy-->>Client: HTTP/1.1 301 Moved Permanently<br/>Location: https://crudibase.codingtech.info/
+    SSLProxy-->>Client: HTTP/1.1 301 Moved Permanently
 
     Client->>Client: Follow redirect
-    Client->>SSLProxy: GET / HTTP/1.1<br/>to port 443 (HTTPS)
+    Client->>SSLProxy: GET / to port 443 (HTTPS)
 
-    Note over SSLProxy: Continue with HTTPS flow...
+    Note over SSLProxy: Continue with HTTPS flow
 ```
 
 ### HTTP Redirect Configuration
@@ -347,25 +347,25 @@ location /api/ {
 sequenceDiagram
     participant Client as Client Browser
     participant SSLProxy as SSL Proxy (Nginx)
-    participant Backend as Backend Service (WebSocket Server)
+    participant Backend as Backend Service (WebSocket)
 
-    Note over Client: Client initiates WebSocket<br/>new WebSocket('wss://crudibase.../api/ws')
+    Note over Client: Client initiates WebSocket
 
-    Client->>SSLProxy: GET /api/ws HTTP/1.1<br/>Upgrade: websocket<br/>Connection: Upgrade<br/>Sec-WebSocket-Key: x3JJHMbDL1E...
+    Client->>SSLProxy: GET /api/ws + WebSocket headers
 
     SSLProxy->>SSLProxy: Decrypt HTTPS (WSS)
     SSLProxy->>SSLProxy: Detect Upgrade header
 
-    Note over SSLProxy: Nginx WebSocket configuration:<br/>proxy_set_header Upgrade $http_upgrade;<br/>proxy_set_header Connection 'upgrade';
+    Note over SSLProxy: Nginx proxies WebSocket upgrade
 
-    SSLProxy->>Backend: GET /ws HTTP/1.1<br/>Upgrade: websocket<br/>Connection: Upgrade<br/>Sec-WebSocket-Key: x3JJHMbDL1E...
+    SSLProxy->>Backend: GET /ws + WebSocket headers
 
     Backend->>Backend: Accept WebSocket upgrade
-    Backend-->>SSLProxy: HTTP/1.1 101 Switching Protocols<br/>Upgrade: websocket<br/>Connection: Upgrade<br/>Sec-WebSocket-Accept: HSmrc0sM...
+    Backend-->>SSLProxy: HTTP/1.1 101 Switching Protocols
 
-    SSLProxy-->>Client: HTTP/1.1 101 Switching Protocols<br/>(Encrypted via WSS)
+    SSLProxy-->>Client: HTTP/1.1 101 Switching Protocols (WSS)
 
-    Note over Client,Backend: WebSocket connection established<br/>Bidirectional communication
+    Note over Client,Backend: WebSocket connection established
 
     loop Real-time messaging
         Client->>SSLProxy: WebSocket frame (encrypted)
@@ -407,21 +407,21 @@ sequenceDiagram
 
     Note over Docker: Every 30 seconds
 
-    Docker->>Container: Execute healthcheck command<br/>curl -f http://localhost/health
+    Docker->>Container: Execute healthcheck command
 
-    Container->>Nginx: GET /health HTTP/1.1<br/>Host: localhost
+    Container->>Nginx: GET /health HTTP/1.1
 
-    Nginx->>Nginx: Match default server block<br/>location /health {}
+    Nginx->>Nginx: Match default server block
 
-    Note over Nginx: access_log off;<br/>return 200 "healthy\n";
+    Note over Nginx: Return 200 healthy
 
-    Nginx-->>Container: HTTP/1.1 200 OK<br/>Content-Type: text/plain<br/>healthy
+    Nginx-->>Container: HTTP/1.1 200 OK
 
-    Container-->>Docker: Exit code: 0 (success)
+    Container-->>Docker: Exit code 0 (success)
 
     Docker->>Docker: Mark container as healthy
 
-    Note over Docker: If 3 consecutive failures,<br/>mark container as unhealthy
+    Note over Docker: If 3 consecutive failures mark unhealthy
 ```
 
 ### Health Check Configuration
@@ -469,21 +469,21 @@ docker ps
 sequenceDiagram
     participant Client as Client Browser
     participant SSLProxy as SSL Proxy (Nginx)
-    participant Backend as Backend Service (Down/Unreachable)
+    participant Backend as Backend Service (Down)
 
     Client->>SSLProxy: GET /api/users HTTPS
 
     SSLProxy->>SSLProxy: Decrypt request
     SSLProxy->>SSLProxy: Match /api/ location
 
-    SSLProxy->>Backend: Attempt connection to<br/>crudibase-backend:3001
-    Note over Backend: Connection refused<br/>(container stopped)
+    SSLProxy->>Backend: Attempt connection
+    Note over Backend: Connection refused (container stopped)
 
     Backend--XSSLProxy: Connection failed
 
     SSLProxy->>SSLProxy: Generate 502 error page
 
-    SSLProxy-->>Client: HTTP/2 502 Bad Gateway<br/>Content-Type: text/html<br/><html><h1>502 Bad Gateway</h1></html>
+    SSLProxy-->>Client: HTTP/2 502 Bad Gateway
 
     Note over Client: Display error page to user
 ```
@@ -504,13 +504,13 @@ sequenceDiagram
     SSLProxy->>Frontend: GET /nonexistent-page
 
     Frontend->>Frontend: Check if file exists
-    Frontend->>Frontend: File not found<br/>Try index.html (SPA fallback)
+    Frontend->>Frontend: File not found, try index.html (SPA fallback)
 
-    Frontend-->>SSLProxy: 200 OK<br/>Content-Type: text/html<br/><html>... (React app)
+    Frontend-->>SSLProxy: 200 OK with React app HTML
 
-    SSLProxy-->>Client: 200 OK (HTTPS)<br/>React app loads
+    SSLProxy-->>Client: 200 OK (HTTPS) React app loads
 
-    Note over Client: React Router handles 404<br/>Shows "Page Not Found" component
+    Note over Client: React Router handles 404 and shows Page Not Found
 ```
 
 ### Common HTTP Status Codes

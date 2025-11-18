@@ -79,7 +79,7 @@ sequenceDiagram
     LE->>Certbot: Send certificate + chain
 
     Certbot->>Volume: Write certificate files
-    Note over Volume: /etc/letsencrypt/live/DOMAIN/<br/>- fullchain.pem<br/>- privkey.pem<br/>- cert.pem<br/>- chain.pem
+    Note over Volume: /etc/letsencrypt/live/DOMAIN/ - fullchain.pem - privkey.pem - cert.pem - chain.pem
 
     Certbot-->>Entrypoint: Certificate obtained successfully
 
@@ -255,7 +255,7 @@ sequenceDiagram
     loop For each certificate
         Certbot->>Certbot: Check expiry date
         alt Less than 30 days remaining
-            Note over Certbot,LE: Certificate needs renewal
+    Note over Certbot,LE: Certificate needs renewal
             Certbot->>LE: Request certificate renewal
             LE->>Certbot: Send HTTP-01 challenge
             Certbot->>Volume: Write challenge file
@@ -263,9 +263,9 @@ sequenceDiagram
             Nginx-->>LE: Challenge response
             LE->>Certbot: Send new certificate
             Certbot->>Volume: Write new certificate
-            Note over Volume: Update archive/fullchain2.pem<br/>Update live/ symlink
+    Note over Volume: Update archive/fullchain2.pem Update live/ symlink
         else More than 30 days remaining
-            Note over Certbot: Skip renewal (not due yet)
+    Note over Certbot: Skip renewal (not due yet)
         end
     end
 
@@ -435,18 +435,18 @@ sequenceDiagram
 
     Note over C,LE: Phase 1: Challenge Request
 
-    C->>LE: POST /acme/new-authz<br/>{domain: "crudibase.codingtech.info"}
+    C->>LE: POST /acme/new-authz {domain: "crudibase.codingtech.info"}
     LE->>DNS: Verify domain is valid
     DNS-->>LE: Domain exists
-    LE->>C: 201 Created<br/>{challenges: [{type: "http-01", token: "ABC123", uri: "..."}]}
+    LE->>C: 201 Created {challenges: [{type: "http-01", token: "ABC123", uri: "..."}]}
 
     Note over C,FS: Phase 2: Challenge Preparation
 
-    C->>C: Compute key authorization<br/>token + account key thumbprint
-    C->>FS: Write file<br/>/var/www/certbot/.well-known/acme-challenge/ABC123
+    C->>C: Compute key authorization token + account key thumbprint
+    C->>FS: Write file /var/www/certbot/.well-known/acme-challenge/ABC123
     Note over FS: File contains: ABC123.XYZ789DEF
 
-    C->>LE: POST /acme/challenge/{id}<br/>{} (ready for validation)
+    C->>LE: POST /acme/challenge/{id} {} (ready for validation)
     LE-->>C: 200 OK (validation pending)
 
     Note over LE,N: Phase 3: Challenge Validation
@@ -457,16 +457,16 @@ sequenceDiagram
     LE->>N: GET http://crudibase.codingtech.info/.well-known/acme-challenge/ABC123
     N->>FS: Read file ABC123
     FS-->>N: Return file contents
-    N-->>LE: 200 OK<br/>ABC123.XYZ789DEF
+    N-->>LE: 200 OK ABC123.XYZ789DEF
 
     LE->>LE: Validate response matches expected
 
     alt Validation Successful
         LE->>C: Challenge status: valid
-        Note over C,LE: Phase 4: Certificate Issuance
-        C->>LE: POST /acme/finalize<br/>{csr: "..."}
+    Note over C,LE: Phase 4: Certificate Issuance
+        C->>LE: POST /acme/finalize {csr: "..."}
         LE->>LE: Generate certificate
-        LE->>C: 200 OK<br/>{certificate: "..."}
+        LE->>C: 200 OK {certificate: "..."}
         C->>FS: Write certificate files
     else Validation Failed
         LE->>C: Challenge status: invalid
