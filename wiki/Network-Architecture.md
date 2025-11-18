@@ -648,11 +648,11 @@ sudo iptables -t nat -L -n -v
 
 ## Related Documentation
 
-- **[Architecture](Architecture.md)** - System architecture overview
-- **[Components](Components.md)** - Container and component details
-- **[Request Flow](Request-Flow.md)** - How requests flow through networks
-- **[Deployment Workflow](Deployment-Workflow.md)** - Network setup during deployment
-- **[Troubleshooting](Troubleshooting.md)** - Network-related issues
+- **[Architecture](Architecture)** - System architecture overview
+- **[Components](Components)** - Container and component details
+- **[Request Flow](Request-Flow)** - How requests flow through networks
+- **[Deployment Workflow](Deployment-Workflow)** - Network setup during deployment
+- **[Troubleshooting](Troubleshooting)** - Network-related issues
 
 ---
 

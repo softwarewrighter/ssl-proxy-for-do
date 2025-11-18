@@ -607,7 +607,7 @@ echo "[$(date)] Certificate renewal process finished"
 **Location**: `scripts/build-and-push.sh` (on Mac)
 **Purpose**: Build and push Docker image to registry
 
-See [Deployment Workflow](Deployment-Workflow.md) for details.
+See [Deployment Workflow](Deployment-Workflow) for details.
 
 ### Test Build Script
 
@@ -701,7 +701,7 @@ networks:
     external: true
 ```
 
-See [Network Architecture](Network-Architecture.md) for details.
+See [Network Architecture](Network-Architecture) for details.
 
 ### Healthcheck
 
@@ -726,7 +726,7 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 
 ### Environment Variables
 
-See [Configuration Guide](Configuration.md) for complete reference.
+See [Configuration Guide](Configuration) for complete reference.
 
 ### File Ownership and Permissions
 
@@ -754,11 +754,11 @@ See [Configuration Guide](Configuration.md) for complete reference.
 
 ## Related Documentation
 
-- **[Architecture](Architecture.md)** - System architecture overview
-- **[SSL Certificate Management](SSL-Certificate-Management.md)** - Certificate lifecycle
-- **[Network Architecture](Network-Architecture.md)** - Docker networking
-- **[Configuration](Configuration.md)** - Environment variables and settings
-- **[Deployment Workflow](Deployment-Workflow.md)** - Build and deployment
+- **[Architecture](Architecture)** - System architecture overview
+- **[SSL Certificate Management](SSL-Certificate-Management)** - Certificate lifecycle
+- **[Network Architecture](Network-Architecture)** - Docker networking
+- **[Configuration](Configuration)** - Environment variables and settings
+- **[Deployment Workflow](Deployment-Workflow)** - Build and deployment
 
 ---
 

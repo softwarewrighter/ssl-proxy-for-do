@@ -612,10 +612,10 @@ environment:
 
 ## Related Documentation
 
-- **[Components](Components.md)** - Nginx component details
-- **[SSL Certificate Management](SSL-Certificate-Management.md)** - Certificate configuration
-- **[Deployment Workflow](Deployment-Workflow.md)** - Deploying configuration changes
-- **[Troubleshooting](Troubleshooting.md)** - Configuration issues
+- **[Components](Components)** - Nginx component details
+- **[SSL Certificate Management](SSL-Certificate-Management)** - Certificate configuration
+- **[Deployment Workflow](Deployment-Workflow)** - Deploying configuration changes
+- **[Troubleshooting](Troubleshooting)** - Configuration issues
 
 ---
 

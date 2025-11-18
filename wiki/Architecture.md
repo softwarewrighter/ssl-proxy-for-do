@@ -586,10 +586,10 @@ graph TB
 
 ## Related Documentation
 
-- **[Components](Components.md)** - Detailed component documentation
-- **[Network Architecture](Network-Architecture.md)** - Docker networking details
-- **[SSL Certificate Management](SSL-Certificate-Management.md)** - Certificate lifecycle
-- **[Deployment Workflow](Deployment-Workflow.md)** - Build and deployment process
+- **[Components](Components)** - Detailed component documentation
+- **[Network Architecture](Network-Architecture)** - Docker networking details
+- **[SSL Certificate Management](SSL-Certificate-Management)** - Certificate lifecycle
+- **[Deployment Workflow](Deployment-Workflow)** - Build and deployment process
 
 ---
 

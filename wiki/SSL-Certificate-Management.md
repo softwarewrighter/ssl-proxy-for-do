@@ -775,10 +775,10 @@ openssl s_client -connect crudibase.codingtech.info:443 -servername crudibase.co
 
 ## Related Documentation
 
-- **[Architecture](Architecture.md)** - System architecture overview
-- **[Components](Components.md)** - Nginx and Certbot component details
-- **[Request Flow](Request-Flow.md)** - How HTTPS requests are processed
-- **[Troubleshooting](Troubleshooting.md)** - General troubleshooting guide
+- **[Architecture](Architecture)** - System architecture overview
+- **[Components](Components)** - Nginx and Certbot component details
+- **[Request Flow](Request-Flow)** - How HTTPS requests are processed
+- **[Troubleshooting](Troubleshooting)** - General troubleshooting guide
 
 ---
 

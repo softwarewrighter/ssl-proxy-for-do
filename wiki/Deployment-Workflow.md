@@ -723,10 +723,10 @@ docker logs ssl-proxy --tail 100
 
 ## Related Documentation
 
-- **[Architecture](Architecture.md)** - System architecture
-- **[Components](Components.md)** - Docker and component details
-- **[Configuration](Configuration.md)** - Environment variables and settings
-- **[Troubleshooting](Troubleshooting.md)** - Debugging deployment issues
+- **[Architecture](Architecture)** - System architecture
+- **[Components](Components)** - Docker and component details
+- **[Configuration](Configuration)** - Environment variables and settings
+- **[Troubleshooting](Troubleshooting)** - Debugging deployment issues
 
 ---
 
