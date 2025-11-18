@@ -622,11 +622,11 @@ location /api/ {
 
 ## Related Documentation
 
-- **[Architecture](Architecture.md)** - System architecture overview
-- **[SSL Certificate Management](SSL-Certificate-Management.md)** - TLS handshake details
-- **[Network Architecture](Network-Architecture.md)** - Docker networking configuration
-- **[Components](Components.md)** - Nginx component details
-- **[Troubleshooting](Troubleshooting.md)** - Debugging request issues
+- **[Architecture](Architecture)** - System architecture overview
+- **[SSL Certificate Management](SSL-Certificate-Management)** - TLS handshake details
+- **[Network Architecture](Network-Architecture)** - Docker networking configuration
+- **[Components](Components)** - Nginx component details
+- **[Troubleshooting](Troubleshooting)** - Debugging request issues
 
 ---
 

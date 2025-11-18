@@ -19,18 +19,18 @@ The SSL Proxy is a production-ready Docker image that combines **Nginx** and **C
 ## Quick Links
 
 ### Architecture & Design
-- **[Architecture Overview](Architecture.md)** - System architecture, components, and design patterns
-- **[Network Architecture](Network-Architecture.md)** - Docker networking, container communication, and network topology
-- **[Request Flow](Request-Flow.md)** - How HTTPS requests are processed from client to backend
+- **[Architecture Overview](Architecture)** - System architecture, components, and design patterns
+- **[Network Architecture](Network-Architecture)** - Docker networking, container communication, and network topology
+- **[Request Flow](Request-Flow)** - How HTTPS requests are processed from client to backend
 
 ### Components
-- **[Core Components](Components.md)** - Detailed documentation of Nginx, Certbot, and supporting components
-- **[SSL Certificate Management](SSL-Certificate-Management.md)** - Certificate acquisition, renewal, and lifecycle management
+- **[Core Components](Components)** - Detailed documentation of Nginx, Certbot, and supporting components
+- **[SSL Certificate Management](SSL-Certificate-Management)** - Certificate acquisition, renewal, and lifecycle management
 
 ### Operations
-- **[Deployment Workflow](Deployment-Workflow.md)** - Build, push, and deployment processes with diagrams
-- **[Configuration Guide](Configuration.md)** - Environment variables, templates, and customization
-- **[Troubleshooting](Troubleshooting.md)** - Common issues, solutions, and debugging techniques
+- **[Deployment Workflow](Deployment-Workflow)** - Build, push, and deployment processes with diagrams
+- **[Configuration Guide](Configuration)** - Environment variables, templates, and customization
+- **[Troubleshooting](Troubleshooting)** - Common issues, solutions, and debugging techniques
 
 ## Key Features
 
@@ -162,7 +162,7 @@ docker pull registry.digitalocean.com/crudibase-registry/ssl-proxy:latest
 docker compose -f docker-compose.prod.yml up -d
 ```
 
-For detailed deployment instructions, see **[Deployment Workflow](Deployment-Workflow.md)**.
+For detailed deployment instructions, see **[Deployment Workflow](Deployment-Workflow)**.
 
 ## Technology Stack
 
@@ -194,16 +194,16 @@ stateDiagram-v2
 
 ## Related Documentation
 
-- **Main README**: [README.md](../README.md)
-- **Project Summary**: [PROJECT-SUMMARY.md](../PROJECT-SUMMARY.md)
-- **Quick Start Guide**: [QUICK-START.md](../QUICK-START.md)
-- **Deployment Workflow**: [DEPLOYMENT-WORKFLOW.md](../DEPLOYMENT-WORKFLOW.md)
-- **DigitalOcean Setup**: [docs/DO-SETUP-GUIDE.md](../docs/DO-SETUP-GUIDE.md)
+- **Main README**: [README.md](../README)
+- **Project Summary**: [PROJECT-SUMMARY.md](../PROJECT-SUMMARY)
+- **Quick Start Guide**: [QUICK-START.md](../QUICK-START)
+- **Deployment Workflow**: [DEPLOYMENT-WORKFLOW.md](../DEPLOYMENT-WORKFLOW)
+- **DigitalOcean Setup**: [docs/DO-SETUP-GUIDE.md](../docs/DO-SETUP-GUIDE)
 
 ## Support
 
 For issues and questions:
-1. Check the **[Troubleshooting](Troubleshooting.md)** page
+1. Check the **[Troubleshooting](Troubleshooting)** page
 2. Review container logs: `docker compose logs ssl-proxy`
 3. Test nginx config: `docker exec ssl-proxy nginx -t`
 4. Check certificate status: `docker exec ssl-proxy certbot certificates`
@@ -217,7 +217,7 @@ To add a new application to the SSL proxy:
 4. Rebuild and push the image
 5. Update DNS records in DigitalOcean
 
-See **[Configuration Guide](Configuration.md)** for detailed instructions.
+See **[Configuration Guide](Configuration)** for detailed instructions.
 
 ## License
 

@@ -592,7 +592,7 @@ proxy_set_header Connection "";
 
 #### Enable Caching (Optional)
 
-See [Configuration Guide](Configuration.md) for caching setup.
+See [Configuration Guide](Configuration) for caching setup.
 
 ### Issue 2: High CPU Usage
 
@@ -835,10 +835,10 @@ docker exec ssl-proxy certbot certificates
 
 ## Related Documentation
 
-- **[Components](Components.md)** - Component details for deeper debugging
-- **[Configuration](Configuration.md)** - Configuration reference
-- **[SSL Certificate Management](SSL-Certificate-Management.md)** - Certificate troubleshooting
-- **[Network Architecture](Network-Architecture.md)** - Network debugging
+- **[Components](Components)** - Component details for deeper debugging
+- **[Configuration](Configuration)** - Configuration reference
+- **[SSL Certificate Management](SSL-Certificate-Management)** - Certificate troubleshooting
+- **[Network Architecture](Network-Architecture)** - Network debugging
 
 ---
 
