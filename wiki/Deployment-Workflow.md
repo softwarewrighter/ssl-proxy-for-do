@@ -25,30 +25,30 @@ The deployment workflow follows a three-stage pipeline:
 ```mermaid
 graph TB
     subgraph "Development Machine (Mac)"
-        Dev[Developer] --> Git[Git Repository<br/>ssl-proxy-for-do]
-        Git --> Build[Build Script<br/>build-and-push.sh]
+        Dev[Developer] --> Git[Git Repository ssl-proxy-for-do]
+        Git --> Build[Build Script build-and-push.sh]
     end
 
     subgraph "Build Process"
-        Build --> Docker[Docker Buildx<br/>AMD64 Build]
-        Docker --> Test[Test Build<br/>nginx -t]
+        Build --> Docker[Docker Buildx AMD64 Build]
+        Docker --> Test[Test Build nginx -t]
     end
 
     subgraph "DigitalOcean Container Registry"
-        Test --> Push[Push Image<br/>registry.digitalocean.com/crudibase-registry/ssl-proxy:latest]
-        Push --> Registry[(Container Registry<br/>Image Storage)]
+        Test --> Push[Push Image registry.digitalocean.com/crudibase-registry/ssl-proxy:latest]
+        Push --> Registry[(Container Registry Image Storage)]
     end
 
     subgraph "Production Droplet"
-        Registry --> Pull[Pull Image<br/>docker pull]
-        Pull --> Deploy[Deploy Container<br/>docker compose up]
-        Deploy --> Run[Running Container<br/>Serving HTTPS]
+        Registry --> Pull[Pull Image docker pull]
+        Pull --> Deploy[Deploy Container docker compose up]
+        Deploy --> Run[Running Container Serving HTTPS]
     end
 
     subgraph "Verification"
-        Run --> Health[Health Check<br/>curl /health]
-        Health --> SSL[Verify SSL<br/>curl https://...]
-        SSL --> Monitor[Monitor Logs<br/>docker logs]
+        Run --> Health[Health Check curl /health]
+        Health --> SSL[Verify SSL curl https://...]
+        SSL --> Monitor[Monitor Logs docker logs]
     end
 
     style Build fill:#FF9800
@@ -63,12 +63,12 @@ graph TB
 ```mermaid
 graph LR
     subgraph "Developer Workstation"
-        MacOS[Mac OS<br/>Docker Desktop]
-        DOCTL[doctl CLI<br/>DigitalOcean API]
+        MacOS[Mac OS Docker Desktop]
+        DOCTL[doctl CLI DigitalOcean API]
     end
 
     subgraph "DigitalOcean Cloud"
-        Registry[Container Registry<br/>crudibase-registry]
+        Registry[Container Registry crudibase-registry]
 
         subgraph "Droplet"
             Docker[Docker Engine]
@@ -183,20 +183,20 @@ echo "  3. Deploy: docker compose -f docker-compose.prod.yml up -d"
 graph TB
     Start([Start Build])
 
-    Start --> CheckDocker{Docker<br/>Running?}
+    Start --> CheckDocker{Docker Running?}
     CheckDocker -->|No| ErrorDocker[Error: Start Docker]
     CheckDocker -->|Yes| Login[doctl registry login]
 
-    Login --> AuthCheck{Auth<br/>Success?}
+    Login --> AuthCheck{Auth Success?}
     AuthCheck -->|No| ErrorAuth[Error: Check API token]
     AuthCheck -->|Yes| BuildCommand[docker buildx build]
 
-    BuildCommand --> Stage1[Stage 1: Base Image<br/>nginx:1.25-alpine]
-    Stage1 --> Stage2[Stage 2: Install Packages<br/>certbot, bash, curl, etc.]
+    BuildCommand --> Stage1[Stage 1: Base Image nginx:1.25-alpine]
+    Stage1 --> Stage2[Stage 2: Install Packages certbot, bash, curl, etc.]
     Stage2 --> Stage3[Stage 3: Create Directories]
-    Stage3 --> Stage4[Stage 4: Copy Configs<br/>nginx.conf, templates]
-    Stage4 --> Stage5[Stage 5: Copy Scripts<br/>entrypoint.sh, renew-*.sh]
-    Stage5 --> Stage6[Stage 6: Set Permissions<br/>chmod +x scripts]
+    Stage3 --> Stage4[Stage 4: Copy Configs nginx.conf, templates]
+    Stage4 --> Stage5[Stage 5: Copy Scripts entrypoint.sh, renew-*.sh]
+    Stage5 --> Stage6[Stage 6: Set Permissions chmod +x scripts]
     Stage6 --> Stage7[Stage 7: Configure Healthcheck]
 
     Stage7 --> Push[Push Layers to Registry]
@@ -283,21 +283,21 @@ sequenceDiagram
 ```mermaid
 graph TB
     subgraph "Local Image Layers"
-        L1[Layer 1: Alpine Base<br/>5.6 MB]
-        L2[Layer 2: Nginx<br/>12.3 MB]
-        L3[Layer 3: Certbot Install<br/>18.7 MB]
-        L4[Layer 4: Config Files<br/>0.1 MB]
-        L5[Layer 5: Scripts<br/>0.01 MB]
-        L6[Layer 6: Permissions<br/>0.001 MB]
+        L1[Layer 1: Alpine Base 5.6 MB]
+        L2[Layer 2: Nginx 12.3 MB]
+        L3[Layer 3: Certbot Install 18.7 MB]
+        L4[Layer 4: Config Files 0.1 MB]
+        L5[Layer 5: Scripts 0.01 MB]
+        L6[Layer 6: Permissions 0.001 MB]
     end
 
     subgraph "Push Process"
-        L1 --> Check1{Layer exists<br/>in registry?}
-        L2 --> Check2{Layer exists<br/>in registry?}
-        L3 --> Check3{Layer exists<br/>in registry?}
-        L4 --> Check4{Layer exists<br/>in registry?}
-        L5 --> Check5{Layer exists<br/>in registry?}
-        L6 --> Check6{Layer exists<br/>in registry?}
+        L1 --> Check1{Layer exists in registry?}
+        L2 --> Check2{Layer exists in registry?}
+        L3 --> Check3{Layer exists in registry?}
+        L4 --> Check4{Layer exists in registry?}
+        L5 --> Check5{Layer exists in registry?}
+        L6 --> Check6{Layer exists in registry?}
     end
 
     Check1 -->|Yes| Skip1[Skip Upload]
@@ -320,7 +320,7 @@ graph TB
     Skip2 --> Registry
     Skip3 --> Registry
 
-    Registry --> Manifest[Update Image Manifest<br/>ssl-proxy:latest]
+    Registry --> Manifest[Update Image Manifest ssl-proxy:latest]
 
     style Registry fill:#2196F3
 ```
@@ -522,7 +522,7 @@ curl http://YOUR_DROPLET_IP/health
 ```mermaid
 graph TB
     Start([Code Change]) --> Commit[Commit to Git]
-    Commit --> BuildLocal[Build on Mac<br/>./scripts/build-and-push.sh]
+    Commit --> BuildLocal[Build on Mac ./scripts/build-and-push.sh]
     BuildLocal --> PushReg[Push to Registry]
 
     PushReg --> SSHDrop[SSH to Droplet]

@@ -19,21 +19,21 @@ This document provides a comprehensive overview of the SSL Proxy architecture, i
 ```mermaid
 graph TB
     subgraph "External"
-        DNS[DNS Server<br/>codingtech.info]
-        LE[Let's Encrypt<br/>Certificate Authority]
+        DNS[DNS Server codingtech.info]
+        LE[Let's Encrypt Certificate Authority]
         Client[Client Browsers]
     end
 
     subgraph "DigitalOcean Infrastructure"
-        Registry[DO Container Registry<br/>crudibase-registry]
+        Registry[DO Container Registry crudibase-registry]
 
         subgraph "Droplet: Ubuntu 20.04 LTS"
             Docker[Docker Engine]
 
             subgraph "SSL Proxy Container"
-                Nginx[Nginx 1.25<br/>Reverse Proxy]
-                Certbot[Certbot 2.7<br/>ACME Client]
-                Cron[Crond<br/>Scheduler]
+                Nginx[Nginx 1.25 Reverse Proxy]
+                Certbot[Certbot 2.7 ACME Client]
+                Cron[Crond Scheduler]
                 Entrypoint[Entrypoint Script]
 
                 Entrypoint -.Initializes.-> Nginx
@@ -46,15 +46,15 @@ graph TB
             end
 
             subgraph "Application Containers"
-                CB_Frontend[Crudibase Frontend<br/>React/Nginx:3000]
-                CB_Backend[Crudibase Backend<br/>Node.js:3001]
-                CT_Frontend[Cruditrack Frontend<br/>React/Nginx:3100]
-                CT_Backend[Cruditrack Backend<br/>Node.js:3101]
+                CB_Frontend[Crudibase Frontend React/Nginx:3000]
+                CB_Backend[Crudibase Backend Node.js:3001]
+                CT_Frontend[Cruditrack Frontend React/Nginx:3100]
+                CT_Backend[Cruditrack Backend Node.js:3101]
             end
 
             subgraph "Docker Volumes"
-                VolLetsEncrypt[letsencrypt<br/>SSL Certificates]
-                VolCertbotWWW[certbot-www<br/>ACME Challenge Files]
+                VolLetsEncrypt[letsencrypt SSL Certificates]
+                VolCertbotWWW[certbot-www ACME Challenge Files]
             end
 
             subgraph "Docker Networks"
@@ -88,26 +88,26 @@ graph TB
 ```mermaid
 graph LR
     subgraph "Layer 1: Edge"
-        L1[Internet Traffic<br/>HTTPS/HTTP]
+        L1[Internet Traffic HTTPS/HTTP]
     end
 
     subgraph "Layer 2: SSL Termination"
-        L2A[Nginx SSL<br/>TLS 1.2/1.3]
-        L2B[Certificate<br/>Management]
+        L2A[Nginx SSL TLS 1.2/1.3]
+        L2B[Certificate Management]
     end
 
     subgraph "Layer 3: Routing"
-        L3A[Host-based<br/>Routing]
-        L3B[Path-based<br/>Routing]
+        L3A[Host-based Routing]
+        L3B[Path-based Routing]
     end
 
     subgraph "Layer 4: Application"
-        L4A[Frontend<br/>Static Files]
-        L4B[Backend<br/>API Services]
+        L4A[Frontend Static Files]
+        L4B[Backend API Services]
     end
 
     subgraph "Layer 5: Data"
-        L5[PostgreSQL<br/>Database]
+        L5[PostgreSQL Database]
     end
 
     L1 --> L2A
@@ -132,23 +132,23 @@ graph LR
 graph TB
     subgraph "Container Startup Sequence"
         Start([Container Start])
-        Start --> Entrypoint[Entrypoint Script<br/>/entrypoint.sh]
+        Start --> Entrypoint[Entrypoint Script /entrypoint.sh]
 
-        Entrypoint --> ProcessTemplates[Process Nginx Templates<br/>envsubst]
-        ProcessTemplates --> TestNginx[Test Nginx Config<br/>nginx -t]
-        TestNginx --> StartNginx1[Start Nginx<br/>Background Mode]
+        Entrypoint --> ProcessTemplates[Process Nginx Templates envsubst]
+        ProcessTemplates --> TestNginx[Test Nginx Config nginx -t]
+        TestNginx --> StartNginx1[Start Nginx Background Mode]
 
-        StartNginx1 --> CheckCerts{Certificates<br/>Exist?}
+        StartNginx1 --> CheckCerts{Certificates Exist?}
 
-        CheckCerts -->|No| ObtainCerts[Obtain Certificates<br/>certbot certonly]
-        CheckCerts -->|Yes| SkipObtain[Skip Certificate<br/>Acquisition]
+        CheckCerts -->|No| ObtainCerts[Obtain Certificates certbot certonly]
+        CheckCerts -->|Yes| SkipObtain[Skip Certificate Acquisition]
 
-        ObtainCerts --> ReloadNginx[Reload Nginx<br/>nginx -s reload]
+        ObtainCerts --> ReloadNginx[Reload Nginx nginx -s reload]
         SkipObtain --> ReloadNginx
 
-        ReloadNginx --> SetupCron[Setup Cron Job<br/>Twice Daily Renewal]
-        SetupCron --> StopNginx[Stop Background<br/>Nginx]
-        StopNginx --> ExecNginx[Start Nginx<br/>Foreground Mode]
+        ReloadNginx --> SetupCron[Setup Cron Job Twice Daily Renewal]
+        SetupCron --> StopNginx[Stop Background Nginx]
+        StopNginx --> ExecNginx[Start Nginx Foreground Mode]
         ExecNginx --> Running([Container Running])
     end
 
@@ -161,25 +161,25 @@ graph TB
 
 ```mermaid
 graph TB
-    MainConf[nginx.conf<br/>Main Configuration]
+    MainConf[nginx.conf Main Configuration]
 
     MainConf --> HTTP[HTTP Context]
 
-    HTTP --> GlobalSettings[Global Settings<br/>• Worker processes<br/>• Logging<br/>• Gzip compression<br/>• Security headers]
+    HTTP --> GlobalSettings[Global Settings • Worker processes • Logging • Gzip compression • Security headers]
 
     HTTP --> IncludeConf[Include /etc/nginx/conf.d/*.conf]
 
-    IncludeConf --> DefaultConf[default.conf<br/>Health & ACME]
-    IncludeConf --> CrudibaseConf[crudibase.conf<br/>Crudibase Routing]
-    IncludeConf --> CruditrackConf[cruditrack.conf<br/>Cruditrack Routing]
+    IncludeConf --> DefaultConf[default.conf Health & ACME]
+    IncludeConf --> CrudibaseConf[crudibase.conf Crudibase Routing]
+    IncludeConf --> CruditrackConf[cruditrack.conf Cruditrack Routing]
 
-    DefaultConf --> DefaultHTTP[HTTP :80<br/>• /health endpoint<br/>• ACME challenge<br/>• Redirect to HTTPS]
+    DefaultConf --> DefaultHTTP[HTTP :80 • /health endpoint • ACME challenge • Redirect to HTTPS]
 
-    CrudibaseConf --> CB_HTTP[HTTP :80<br/>• ACME challenge<br/>• Redirect to HTTPS]
-    CrudibaseConf --> CB_HTTPS[HTTPS :443<br/>• SSL config<br/>• /api → backend<br/>• / → frontend]
+    CrudibaseConf --> CB_HTTP[HTTP :80 • ACME challenge • Redirect to HTTPS]
+    CrudibaseConf --> CB_HTTPS[HTTPS :443 • SSL config • /api → backend • / → frontend]
 
-    CruditrackConf --> CT_HTTP[HTTP :80<br/>• ACME challenge<br/>• Redirect to HTTPS]
-    CruditrackConf --> CT_HTTPS[HTTPS :443<br/>• SSL config<br/>• /api → backend<br/>• / → frontend]
+    CruditrackConf --> CT_HTTP[HTTP :80 • ACME challenge • Redirect to HTTPS]
+    CruditrackConf --> CT_HTTPS[HTTPS :443 • SSL config • /api → backend • / → frontend]
 
     style MainConf fill:#4CAF50
     style CrudibaseConf fill:#2196F3
@@ -192,27 +192,27 @@ graph TB
 
 ```mermaid
 graph LR
-    Base[FROM nginx:1.25-alpine<br/>Base Image]
+    Base[FROM nginx:1.25-alpine Base Image]
 
-    Base --> Install[Install Packages<br/>• certbot<br/>• certbot-nginx<br/>• openssl<br/>• bash<br/>• curl<br/>• tzdata]
+    Base --> Install[Install Packages • certbot • certbot-nginx • openssl • bash • curl • tzdata]
 
-    Install --> Dirs[Create Directories<br/>• /etc/letsencrypt<br/>• /var/www/certbot<br/>• /var/log/letsencrypt]
+    Install --> Dirs[Create Directories • /etc/letsencrypt • /var/www/certbot • /var/log/letsencrypt]
 
-    Dirs --> CopyNginx[Copy Nginx Configs<br/>• nginx.conf<br/>• templates/*.template]
+    Dirs --> CopyNginx[Copy Nginx Configs • nginx.conf • templates/*.template]
 
-    CopyNginx --> CopyScripts[Copy Scripts<br/>• entrypoint.sh<br/>• renew-certificates.sh]
+    CopyNginx --> CopyScripts[Copy Scripts • entrypoint.sh • renew-certificates.sh]
 
-    CopyScripts --> Perms[Set Permissions<br/>chmod +x scripts]
+    CopyScripts --> Perms[Set Permissions chmod +x scripts]
 
-    Perms --> Expose[Expose Ports<br/>80, 443]
+    Perms --> Expose[Expose Ports 80, 443]
 
-    Expose --> Health[Configure Healthcheck<br/>curl /health]
+    Expose --> Health[Configure Healthcheck curl /health]
 
-    Health --> Entry[Set Entrypoint<br/>/entrypoint.sh]
+    Health --> Entry[Set Entrypoint /entrypoint.sh]
 
-    Entry --> CMD[Set CMD<br/>nginx -g 'daemon off;']
+    Entry --> CMD[Set CMD nginx -g 'daemon off;']
 
-    CMD --> Final([Final Image<br/>~48MB])
+    CMD --> Final([Final Image ~48MB])
 
     style Base fill:#90CAF9
     style Final fill:#4CAF50
@@ -242,24 +242,24 @@ ssl-proxy container (PID 1)
 
 ```mermaid
 graph TB
-    Client[Client Request<br/>https://crudibase.codingtech.info/api/users]
+    Client[Client Request https://crudibase.codingtech.info/api/users]
 
-    Client --> DNS[DNS Resolution<br/>IP Address]
-    DNS --> TCP[TCP Handshake<br/>Port 443]
-    TCP --> TLS[TLS Handshake<br/>Certificate Validation]
+    Client --> DNS[DNS Resolution IP Address]
+    DNS --> TCP[TCP Handshake Port 443]
+    TCP --> TLS[TLS Handshake Certificate Validation]
 
-    TLS --> NginxSSL[Nginx SSL Termination<br/>Decrypt HTTPS]
+    TLS --> NginxSSL[Nginx SSL Termination Decrypt HTTPS]
 
-    NginxSSL --> HostMatch{Host Header<br/>Matching}
+    NginxSSL --> HostMatch{Host Header Matching}
 
-    HostMatch -->|crudibase.*| PathMatch1{Path<br/>Matching}
-    HostMatch -->|cruditrack.*| PathMatch2{Path<br/>Matching}
+    HostMatch -->|crudibase.*| PathMatch1{Path Matching}
+    HostMatch -->|cruditrack.*| PathMatch2{Path Matching}
 
-    PathMatch1 -->|/api/*| CB_Backend[Crudibase Backend<br/>http://crudibase-backend:3001]
-    PathMatch1 -->|/*| CB_Frontend[Crudibase Frontend<br/>http://crudibase-frontend:3000]
+    PathMatch1 -->|/api/*| CB_Backend[Crudibase Backend http://crudibase-backend:3001]
+    PathMatch1 -->|/*| CB_Frontend[Crudibase Frontend http://crudibase-frontend:3000]
 
-    PathMatch2 -->|/api/*| CT_Backend[Cruditrack Backend<br/>http://cruditrack-backend:3101]
-    PathMatch2 -->|/*| CT_Frontend[Cruditrack Frontend<br/>http://cruditrack-frontend:3100]
+    PathMatch2 -->|/api/*| CT_Backend[Cruditrack Backend http://cruditrack-backend:3101]
+    PathMatch2 -->|/*| CT_Frontend[Cruditrack Frontend http://cruditrack-frontend:3100]
 
     CB_Backend --> AppProcess[Application Processing]
     CB_Frontend --> AppProcess
@@ -268,7 +268,7 @@ graph TB
 
     AppProcess --> Response[HTTP Response]
     Response --> NginxEncrypt[Nginx SSL Encryption]
-    NginxEncrypt --> ClientResponse[Encrypted Response<br/>to Client]
+    NginxEncrypt --> ClientResponse[Encrypted Response to Client]
 
     style NginxSSL fill:#4CAF50
     style NginxEncrypt fill:#4CAF50
@@ -283,26 +283,26 @@ graph TB
 graph TB
     Start([First Container Start])
 
-    Start --> Check{Certificate<br/>Files Exist?}
+    Start --> Check{Certificate Files Exist?}
 
-    Check -->|No| PrepareNginx[Start Nginx<br/>HTTP Only Mode]
-    PrepareNginx --> ACMEChallenge[Certbot Initiates<br/>ACME Challenge]
+    Check -->|No| PrepareNginx[Start Nginx HTTP Only Mode]
+    PrepareNginx --> ACMEChallenge[Certbot Initiates ACME Challenge]
 
-    ACMEChallenge --> WriteChallenge[Write Challenge File<br/>/var/www/certbot/.well-known/]
-    WriteChallenge --> LERequest[Let's Encrypt<br/>Validates Challenge]
-    LERequest --> ReceiveCert[Receive Certificate<br/>& Private Key]
+    ACMEChallenge --> WriteChallenge[Write Challenge File /var/www/certbot/.well-known/]
+    WriteChallenge --> LERequest[Let's Encrypt Validates Challenge]
+    LERequest --> ReceiveCert[Receive Certificate & Private Key]
 
-    ReceiveCert --> WriteCert[Write to Volume<br/>/etc/letsencrypt/live/]
+    ReceiveCert --> WriteCert[Write to Volume /etc/letsencrypt/live/]
 
-    Check -->|Yes| LoadCert[Load Existing<br/>Certificates]
-    WriteCert --> EnableHTTPS[Enable HTTPS<br/>in Nginx]
+    Check -->|Yes| LoadCert[Load Existing Certificates]
+    WriteCert --> EnableHTTPS[Enable HTTPS in Nginx]
     LoadCert --> EnableHTTPS
 
-    EnableHTTPS --> ReloadNginx[Nginx Reload<br/>Zero Downtime]
+    EnableHTTPS --> ReloadNginx[Nginx Reload Zero Downtime]
     ReloadNginx --> Serving([Serving HTTPS])
 
-    Serving -.30 Days Before Expiry.-> RenewCron[Cron Triggers<br/>Renewal]
-    RenewCron --> RenewCert[Certbot Renew<br/>Command]
+    Serving -.30 Days Before Expiry.-> RenewCron[Cron Triggers Renewal]
+    RenewCron --> RenewCert[Certbot Renew Command]
     RenewCert --> WriteCert
 
     style ReceiveCert fill:#4CAF50
@@ -317,32 +317,32 @@ graph TB
 ```mermaid
 graph TB
     subgraph "Layer 1: Network Security"
-        FW[Firewall Rules<br/>Ports: 22, 80, 443]
-        DNS_SEC[DNS Security<br/>A Records Only]
+        FW[Firewall Rules Ports: 22, 80, 443]
+        DNS_SEC[DNS Security A Records Only]
     end
 
     subgraph "Layer 2: SSL/TLS Security"
-        TLS_VER[TLS Versions<br/>1.2, 1.3 Only]
-        CIPHER[Strong Ciphers<br/>HIGH:!aNULL:!MD5]
-        HSTS[HSTS Header<br/>1 Year Max-Age]
+        TLS_VER[TLS Versions 1.2, 1.3 Only]
+        CIPHER[Strong Ciphers HIGH:!aNULL:!MD5]
+        HSTS[HSTS Header 1 Year Max-Age]
     end
 
     subgraph "Layer 3: HTTP Security"
-        XSS[X-XSS-Protection<br/>1; mode=block]
-        FRAME[X-Frame-Options<br/>SAMEORIGIN]
-        NOSNIFF[X-Content-Type-Options<br/>nosniff]
-        CORS[CORS Headers<br/>Per Application]
+        XSS[X-XSS-Protection 1; mode=block]
+        FRAME[X-Frame-Options SAMEORIGIN]
+        NOSNIFF[X-Content-Type-Options nosniff]
+        CORS[CORS Headers Per Application]
     end
 
     subgraph "Layer 4: Application Security"
-        JWT[JWT Authentication<br/>Backend Validation]
-        INPUT[Input Validation<br/>Application Layer]
+        JWT[JWT Authentication Backend Validation]
+        INPUT[Input Validation Application Layer]
     end
 
     subgraph "Layer 5: Container Security"
-        ALPINE[Alpine Linux<br/>Minimal Attack Surface]
-        NONROOT[Non-Root User<br/>nginx user]
-        READONLY[Read-Only Configs<br/>Template System]
+        ALPINE[Alpine Linux Minimal Attack Surface]
+        NONROOT[Non-Root User nginx user]
+        READONLY[Read-Only Configs Template System]
     end
 
     Client[Client] --> FW
@@ -361,9 +361,9 @@ graph TB
 ```mermaid
 graph LR
     subgraph "Private Key Security"
-        PK[Private Key<br/>RSA 2048+]
-        PK_PERM[File Permissions<br/>600 (owner only)]
-        PK_VOL[Docker Volume<br/>Persistent Storage]
+        PK[Private Key RSA 2048+]
+        PK_PERM[File Permissions 600 (owner only)]
+        PK_VOL[Docker Volume Persistent Storage]
 
         PK --> PK_PERM
         PK_PERM --> PK_VOL
@@ -372,7 +372,7 @@ graph LR
     subgraph "Certificate Chain"
         CERT[Server Certificate]
         INTER[Intermediate CA]
-        ROOT[Root CA<br/>Let's Encrypt]
+        ROOT[Root CA Let's Encrypt]
 
         CERT --> INTER
         INTER --> ROOT
@@ -380,8 +380,8 @@ graph LR
 
     subgraph "Validation"
         OCSP[OCSP Stapling]
-        VALID[Certificate Validity<br/>90 Days]
-        RENEW[Auto-Renewal<br/>at 60 Days]
+        VALID[Certificate Validity 90 Days]
+        RENEW[Auto-Renewal at 60 Days]
 
         VALID --> RENEW
     end
@@ -572,11 +572,11 @@ graph TB
     end
 
     subgraph "Scaled Architecture (Future)"
-        DNS_LB[DNS Load Balancing<br/>or CDN]
-        DNS_LB --> Proxy1[SSL Proxy 1<br/>Droplet 1]
-        DNS_LB --> Proxy2[SSL Proxy 2<br/>Droplet 2]
+        DNS_LB[DNS Load Balancing or CDN]
+        DNS_LB --> Proxy1[SSL Proxy 1 Droplet 1]
+        DNS_LB --> Proxy2[SSL Proxy 2 Droplet 2]
 
-        Proxy1 --> AppPool[Application Pool<br/>Shared Backend]
+        Proxy1 --> AppPool[Application Pool Shared Backend]
         Proxy2 --> AppPool
     end
 

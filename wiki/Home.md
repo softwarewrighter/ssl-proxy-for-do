@@ -71,22 +71,22 @@ graph TB
 
     subgraph "DigitalOcean Droplet"
         subgraph "SSL Proxy Container"
-            Nginx[Nginx<br/>Port 80, 443]
-            Certbot[Certbot<br/>SSL Certificates]
-            Cron[Cron<br/>Auto-renewal]
+            Nginx[Nginx Port 80, 443]
+            Certbot[Certbot SSL Certificates]
+            Cron[Cron Auto-renewal]
 
             Certbot -.Certificate Files.-> Nginx
             Cron -.Triggers.-> Certbot
         end
 
         subgraph "Crudibase Network"
-            CB_FE[Crudibase Frontend<br/>Port 3000]
-            CB_BE[Crudibase Backend<br/>Port 3001]
+            CB_FE[Crudibase Frontend Port 3000]
+            CB_BE[Crudibase Backend Port 3001]
         end
 
         subgraph "Cruditrack Network"
-            CT_FE[Cruditrack Frontend<br/>Port 3100]
-            CT_BE[Cruditrack Backend<br/>Port 3101]
+            CT_FE[Cruditrack Frontend Port 3100]
+            CT_BE[Cruditrack Backend Port 3101]
         end
     end
 

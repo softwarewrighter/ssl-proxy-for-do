@@ -124,12 +124,12 @@ The SSL Proxy uses `envsubst` to process Nginx configuration templates during co
 
 ```mermaid
 graph LR
-    Template[Template File<br/>default.conf.template] --> Entrypoint[Entrypoint Script<br/>entrypoint.sh]
-    EnvVars[Environment Variables<br/>DOMAIN=codingtech.info] --> Entrypoint
+    Template[Template File default.conf.template] --> Entrypoint[Entrypoint Script entrypoint.sh]
+    EnvVars[Environment Variables DOMAIN=codingtech.info] --> Entrypoint
 
-    Entrypoint --> Envsubst[envsubst<br/>Variable Substitution]
-    Envsubst --> Config[Generated Config<br/>default.conf]
-    Config --> Nginx[Nginx<br/>Load & Use]
+    Entrypoint --> Envsubst[envsubst Variable Substitution]
+    Envsubst --> Config[Generated Config default.conf]
+    Config --> Nginx[Nginx Load & Use]
 
     style Template fill:#90CAF9
     style Config fill:#4CAF50

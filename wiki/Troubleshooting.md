@@ -59,10 +59,10 @@ graph TD
     Start -->|Config errors| NginxIssue[Check Nginx Issues]
 
     ContainerIssue --> CheckLogs[docker logs ssl-proxy]
-    CertIssue --> CheckCerts[docker exec ssl-proxy<br/>certbot certificates]
+    CertIssue --> CheckCerts[docker exec ssl-proxy certbot certificates]
     ConnectionIssue --> CheckNetwork[docker network inspect]
     PerfIssue --> CheckResources[docker stats ssl-proxy]
-    NginxIssue --> CheckConfig[docker exec ssl-proxy<br/>nginx -t]
+    NginxIssue --> CheckConfig[docker exec ssl-proxy nginx -t]
 
     style Start fill:#2196F3
     style CheckLogs fill:#4CAF50

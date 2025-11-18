@@ -19,11 +19,11 @@ This document provides detailed documentation of all components that make up the
 ```mermaid
 graph TB
     subgraph "SSL Proxy Container"
-        Nginx[Nginx 1.25<br/>Web Server & Reverse Proxy]
-        Certbot[Certbot 2.7<br/>ACME Client]
-        Cron[Alpine Crond<br/>Task Scheduler]
-        Entrypoint[Entrypoint Script<br/>Initialization]
-        Renew[Renewal Script<br/>Certificate Management]
+        Nginx[Nginx 1.25 Web Server & Reverse Proxy]
+        Certbot[Certbot 2.7 ACME Client]
+        Cron[Alpine Crond Task Scheduler]
+        Entrypoint[Entrypoint Script Initialization]
+        Renew[Renewal Script Certificate Management]
 
         Entrypoint -.Configures.-> Nginx
         Entrypoint -.Runs.-> Certbot
@@ -34,10 +34,10 @@ graph TB
     end
 
     subgraph "File System"
-        Configs[Nginx Configs<br/>/etc/nginx/]
-        Certs[SSL Certificates<br/>/etc/letsencrypt/]
-        ACME[ACME Challenges<br/>/var/www/certbot/]
-        Logs[Log Files<br/>/var/log/]
+        Configs[Nginx Configs /etc/nginx/]
+        Certs[SSL Certificates /etc/letsencrypt/]
+        ACME[ACME Challenges /var/www/certbot/]
+        Logs[Log Files /var/log/]
     end
 
     Nginx <--> Configs

@@ -24,12 +24,12 @@ The SSL Proxy acts as a reverse proxy, handling SSL/TLS termination and routing 
 
 ```mermaid
 graph LR
-    Client[Client<br/>Browser]
-    DNS[DNS<br/>Resolution]
-    TCP[TCP<br/>Connection]
-    TLS[TLS<br/>Handshake]
-    Nginx[Nginx<br/>Routing]
-    App[Application<br/>Processing]
+    Client[Client Browser]
+    DNS[DNS Resolution]
+    TCP[TCP Connection]
+    TLS[TLS Handshake]
+    Nginx[Nginx Routing]
+    App[Application Processing]
 
     Client --> DNS --> TCP --> TLS --> Nginx --> App
 
@@ -542,8 +542,8 @@ graph TD
 
     TLS --> HostHTTPS{Host Match?}
 
-    HostHTTP -->|crudibase.*| ACMECheck{Path starts with<br/>/.well-known/?}
-    HostHTTP -->|cruditrack.*| ACMECheck2{Path starts with<br/>/.well-known/?}
+    HostHTTP -->|crudibase.*| ACMECheck{Path starts with /.well-known/?}
+    HostHTTP -->|cruditrack.*| ACMECheck2{Path starts with /.well-known/?}
     HostHTTP -->|Other| RedirectHTTPS[301 Redirect to HTTPS]
 
     ACMECheck -->|Yes| ServeACME[Serve ACME challenge]
@@ -555,11 +555,11 @@ graph TD
     HostHTTPS -->|cruditrack.*| PathCT{Path?}
     HostHTTPS -->|Other| Error404[404 Not Found]
 
-    PathCB -->|/api/*| ProxyCB_BE[Proxy to<br/>crudibase-backend:3001]
-    PathCB -->|/*| ProxyCB_FE[Proxy to<br/>crudibase-frontend:3000]
+    PathCB -->|/api/*| ProxyCB_BE[Proxy to crudibase-backend:3001]
+    PathCB -->|/*| ProxyCB_FE[Proxy to crudibase-frontend:3000]
 
-    PathCT -->|/api/*| ProxyCT_BE[Proxy to<br/>cruditrack-backend:3101]
-    PathCT -->|/*| ProxyCT_FE[Proxy to<br/>cruditrack-frontend:3100]
+    PathCT -->|/api/*| ProxyCT_BE[Proxy to cruditrack-backend:3101]
+    PathCT -->|/*| ProxyCT_FE[Proxy to cruditrack-frontend:3100]
 
     ProxyCB_BE --> AddHeaders[Add Proxy Headers]
     ProxyCB_FE --> AddHeaders

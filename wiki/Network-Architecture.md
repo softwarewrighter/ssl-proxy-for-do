@@ -31,18 +31,18 @@ The SSL Proxy uses Docker's bridge networking to connect to application containe
 ```mermaid
 graph TB
     subgraph Internet
-        Client[Client<br/>203.0.113.42]
+        Client[Client 203.0.113.42]
     end
 
     subgraph "Docker Host (Droplet: 123.45.67.89)"
-        HostIP[Host Network Interface<br/>eth0: 123.45.67.89]
+        HostIP[Host Network Interface eth0: 123.45.67.89]
 
         subgraph "Docker Bridge Networks"
             subgraph "crudibase-network (172.18.0.0/16)"
-                SSL_CB[ssl-proxy<br/>172.18.0.2]
-                CB_FE[crudibase-frontend<br/>172.18.0.3:3000]
-                CB_BE[crudibase-backend<br/>172.18.0.4:3001]
-                CB_DB[crudibase-db<br/>172.18.0.5:5432]
+                SSL_CB[ssl-proxy 172.18.0.2]
+                CB_FE[crudibase-frontend 172.18.0.3:3000]
+                CB_BE[crudibase-backend 172.18.0.4:3001]
+                CB_DB[crudibase-db 172.18.0.5:5432]
 
                 SSL_CB -.HTTP.-> CB_FE
                 SSL_CB -.HTTP.-> CB_BE
@@ -50,10 +50,10 @@ graph TB
             end
 
             subgraph "cruditrack-network (172.19.0.0/16)"
-                SSL_CT[ssl-proxy<br/>172.19.0.2]
-                CT_FE[cruditrack-frontend<br/>172.19.0.3:3100]
-                CT_BE[cruditrack-backend<br/>172.19.0.4:3101]
-                CT_DB[cruditrack-db<br/>172.19.0.5:5432]
+                SSL_CT[ssl-proxy 172.19.0.2]
+                CT_FE[cruditrack-frontend 172.19.0.3:3100]
+                CT_BE[cruditrack-backend 172.19.0.4:3101]
+                CT_DB[cruditrack-db 172.19.0.5:5432]
 
                 SSL_CT -.HTTP.-> CT_FE
                 SSL_CT -.HTTP.-> CT_BE
@@ -79,9 +79,9 @@ graph TB
 
 ```mermaid
 graph LR
-    Internet[Internet] -->|HTTPS :443| Host[Droplet Host<br/>123.45.67.89]
+    Internet[Internet] -->|HTTPS :443| Host[Droplet Host 123.45.67.89]
 
-    Host -->|Port 80:80<br/>Port 443:443| SSLProxy[SSL Proxy Container]
+    Host -->|Port 80:80 Port 443:443| SSLProxy[SSL Proxy Container]
 
     SSLProxy -->|crudibase-network| CB[Crudibase Containers]
     SSLProxy -->|cruditrack-network| CT[Cruditrack Containers]
@@ -256,10 +256,10 @@ Within `crudibase-network`:
 graph TB
     subgraph "crudibase-network"
         direction LR
-        SSLProxy1[ssl-proxy<br/>172.18.0.2]
-        CB_FE[crudibase-frontend<br/>172.18.0.3]
-        CB_BE[crudibase-backend<br/>172.18.0.4]
-        CB_DB[crudibase-db<br/>172.18.0.5]
+        SSLProxy1[ssl-proxy 172.18.0.2]
+        CB_FE[crudibase-frontend 172.18.0.3]
+        CB_BE[crudibase-backend 172.18.0.4]
+        CB_DB[crudibase-db 172.18.0.5]
 
         SSLProxy1 <-->|✅ Can Communicate| CB_FE
         SSLProxy1 <-->|✅ Can Communicate| CB_BE
@@ -271,10 +271,10 @@ graph TB
 
     subgraph "cruditrack-network"
         direction LR
-        SSLProxy2[ssl-proxy<br/>172.19.0.2]
-        CT_FE[cruditrack-frontend<br/>172.19.0.3]
-        CT_BE[cruditrack-backend<br/>172.19.0.4]
-        CT_DB[cruditrack-db<br/>172.19.0.5]
+        SSLProxy2[ssl-proxy 172.19.0.2]
+        CT_FE[cruditrack-frontend 172.19.0.3]
+        CT_BE[cruditrack-backend 172.19.0.4]
+        CT_DB[cruditrack-db 172.19.0.5]
 
         SSLProxy2 <-->|✅ Can Communicate| CT_FE
         SSLProxy2 <-->|✅ Can Communicate| CT_BE
@@ -343,8 +343,8 @@ graph LR
     Internet[Internet] -->|Port 443| HostPort443[Droplet IP:443]
     Internet -->|Port 80| HostPort80[Droplet IP:80]
 
-    HostPort443 -->|Forwarded to| ContainerPort443[Container Port 443<br/>Nginx HTTPS]
-    HostPort80 -->|Forwarded to| ContainerPort80[Container Port 80<br/>Nginx HTTP]
+    HostPort443 -->|Forwarded to| ContainerPort443[Container Port 443 Nginx HTTPS]
+    HostPort80 -->|Forwarded to| ContainerPort80[Container Port 80 Nginx HTTP]
 
     ContainerPort443 -->|TLS Termination| Nginx[Nginx Process]
     ContainerPort80 -->|HTTP| Nginx
@@ -402,8 +402,8 @@ Public DNS records point subdomains to droplet IP:
 ```mermaid
 graph TB
     Client[Client Browser]
-    DNS[DNS Server<br/>codingtech.info]
-    Droplet[Droplet<br/>123.45.67.89]
+    DNS[DNS Server codingtech.info]
+    Droplet[Droplet 123.45.67.89]
 
     Client -->|1. Query: crudibase.codingtech.info| DNS
     DNS -->|2. A Record: 123.45.67.89| Client
@@ -483,16 +483,16 @@ DigitalOcean firewall configuration:
 
 ```mermaid
 graph TB
-    Internet[Internet<br/>Any IP]
+    Internet[Internet Any IP]
 
     subgraph "DigitalOcean Firewall"
-        FW_SSH[Allow TCP :22<br/>SSH Access]
-        FW_HTTP[Allow TCP :80<br/>HTTP - ACME Challenge]
-        FW_HTTPS[Allow TCP :443<br/>HTTPS - Application Traffic]
+        FW_SSH[Allow TCP :22 SSH Access]
+        FW_HTTP[Allow TCP :80 HTTP - ACME Challenge]
+        FW_HTTPS[Allow TCP :443 HTTPS - Application Traffic]
         FW_DENY[Deny All Other Ports]
     end
 
-    Droplet[Droplet<br/>123.45.67.89]
+    Droplet[Droplet 123.45.67.89]
 
     Internet -->|SSH| FW_SSH -->|Allowed| Droplet
     Internet -->|HTTP| FW_HTTP -->|Allowed| Droplet
