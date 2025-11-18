@@ -228,6 +228,15 @@ Visit in browser:
 - https://crudibase.codingtech.info
 - https://cruditrack.codingtech.info
 
+### 5. Secure Application Ports (Critical!)
+Remove port mappings from application docker-compose files:
+```bash
+# Edit /opt/crudibase/docker-compose.yml and /opt/cruditrack/docker-compose.yml
+# Remove or comment out all "ports:" sections
+# Restart: docker compose down && docker compose up -d
+```
+See [SECURITY-HARDENING.md](docs/SECURITY-HARDENING.md) for complete guide.
+
 ## Documentation Reference
 
 | Document | Purpose |
@@ -235,6 +244,7 @@ Visit in browser:
 | [README.md](README.md) | Main project documentation |
 | [DEPLOYMENT-WORKFLOW.md](DEPLOYMENT-WORKFLOW.md) | Step-by-step deployment guide |
 | [docs/DO-SETUP-GUIDE.md](docs/DO-SETUP-GUIDE.md) | Manual DO UI steps |
+| [docs/SECURITY-HARDENING.md](docs/SECURITY-HARDENING.md) | Port security and firewall configuration |
 | [.env.example](.env.example) | Configuration template |
 
 ## Benefits of This Approach

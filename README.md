@@ -127,6 +127,7 @@ ssl-proxy-for-do/
 ## Documentation
 
 - **[DO Setup Guide](docs/DO-SETUP-GUIDE.md)** - Complete setup instructions including manual steps in DigitalOcean web UI
+- **[Security Hardening](docs/SECURITY-HARDENING.md)** - Securing application ports and firewall configuration
 - **[SSL Research](docs/ssl-research.txt)** - Background research and planning
 - **[Background](docs/background.md)** - Project context and decisions
 
@@ -207,6 +208,20 @@ See [DO Setup Guide - Troubleshooting](docs/DO-SETUP-GUIDE.md#troubleshooting) f
 - XSS protection headers
 - Frame protection headers
 - CORS configured per application
+
+### Important: Secure Application Ports
+
+After deployment, **remove port mappings** from your application docker-compose files to prevent direct access bypassing the SSL proxy. See [Security Hardening Guide](docs/SECURITY-HARDENING.md) for detailed instructions.
+
+**Quick Fix**:
+```bash
+# Remove ports: sections from application docker-compose.yml files
+# Then restart:
+cd /opt/crudibase && docker compose down && docker compose up -d
+cd /opt/cruditrack && docker compose down && docker compose up -d
+```
+
+See [SECURITY-HARDENING.md](docs/SECURITY-HARDENING.md) for complete security best practices.
 
 ## Certificate Management
 
