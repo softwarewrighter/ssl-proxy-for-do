@@ -194,11 +194,11 @@ stateDiagram-v2
 
 ## Related Documentation
 
-- **Main README**: [README.md](../README)
-- **Project Summary**: [PROJECT-SUMMARY.md](../PROJECT-SUMMARY)
-- **Quick Start Guide**: [QUICK-START.md](../QUICK-START)
-- **Deployment Workflow**: [DEPLOYMENT-WORKFLOW.md](../DEPLOYMENT-WORKFLOW)
-- **DigitalOcean Setup**: [docs/DO-SETUP-GUIDE.md](../docs/DO-SETUP-GUIDE)
+- **Main README**: [README.md](https://github.com/softwarewrighter/ssl-proxy-for-do/blob/main/README)
+- **Project Summary**: [PROJECT-SUMMARY.md](https://github.com/softwarewrighter/ssl-proxy-for-do/blob/main/PROJECT-SUMMARY)
+- **Quick Start Guide**: [QUICK-START.md](https://github.com/softwarewrighter/ssl-proxy-for-do/blob/main/QUICK-START)
+- **Deployment Workflow**: [DEPLOYMENT-WORKFLOW.md](https://github.com/softwarewrighter/ssl-proxy-for-do/blob/main/DEPLOYMENT-WORKFLOW)
+- **DigitalOcean Setup**: [docs/DO-SETUP-GUIDE.md](https://github.com/softwarewrighter/ssl-proxy-for-do/blob/main/docs/DO-SETUP-GUIDE)
 
 ## Support
 
