@@ -219,8 +219,8 @@ location /api/ {
 
 ```mermaid
 sequenceDiagram
-    participant Nginx as Nginx<br/>(in ssl-proxy)
-    participant DNS as Docker DNS<br/>(127.0.0.11)
+    participant Nginx as Nginx (in ssl-proxy)
+    participant DNS as Docker DNS (127.0.0.11)
     participant Backend as crudibase-backend
 
     Nginx->>DNS: Resolve "crudibase-backend"
@@ -427,7 +427,7 @@ Docker's embedded DNS (127.0.0.11) resolves container names:
 ```mermaid
 sequenceDiagram
     participant App as Application Container
-    participant DNS as Docker DNS<br/>(127.0.0.11)
+    participant DNS as Docker DNS (127.0.0.11)
     participant Target as Target Container
 
     App->>DNS: Resolve "crudibase-backend"
