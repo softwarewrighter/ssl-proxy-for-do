@@ -56,19 +56,19 @@ sequenceDiagram
     Entrypoint->>Nginx: Test config (nginx -t)
     Entrypoint->>Nginx: Start in background mode
 
- Note over Entrypoint: Check if certificates exist
+    Note over Entrypoint: Check if certificates exist
 
     Entrypoint->>Volume: Check /etc/letsencrypt/live/
     Volume-->>Entrypoint: Certificates not found
 
- Note over Entrypoint,LE: Begin Certificate Acquisition
+    Note over Entrypoint,LE: Begin Certificate Acquisition
 
     Entrypoint->>Certbot: certbot certonly --webroot
     Certbot->>LE: Request certificate for domain
     LE->>Certbot: Send HTTP-01 challenge token
 
     Certbot->>Volume: Write challenge file
- Note over Volume: /var/www/certbot/.well-known/acme-challenge/TOKEN
+    Note over Volume: /var/www/certbot/.well-known/acme-challenge/TOKEN
 
     LE->>Nginx: GET /.well-known/acme-challenge/TOKEN
     Nginx->>Volume: Read challenge file
@@ -79,12 +79,12 @@ sequenceDiagram
     LE->>Certbot: Send certificate + chain
 
     Certbot->>Volume: Write certificate files
- Note over Volume: /etc/letsencrypt/live/DOMAIN/ - fullchain.pem - privkey.pem - cert.pem - chain.pem
+    Note over Volume: /etc/letsencrypt/live/DOMAIN/ - fullchain.pem - privkey.pem - cert.pem - chain.pem
 
     Certbot-->>Entrypoint: Certificate obtained successfully
 
     Entrypoint->>Nginx: Reload (nginx -s reload)
- Note over Nginx: Now serving HTTPS with valid certificate
+    Note over Nginx: Now serving HTTPS with valid certificate
 
     Entrypoint->>Container: Setup cron for renewal
     Entrypoint->>Nginx: Restart in foreground mode
@@ -245,7 +245,7 @@ sequenceDiagram
     participant Volume as Docker Volume
     participant Nginx as Nginx Server
 
- Note over Cron: Runs at 00:00 and 12:00 daily
+    Note over Cron: Runs at 00:00 and 12:00 daily
 
     Cron->>Script: Execute renewal script
     Script->>Certbot: certbot renew --quiet
@@ -255,7 +255,7 @@ sequenceDiagram
     loop For each certificate
         Certbot->>Certbot: Check expiry date
         alt Less than 30 days remaining
- Note over Certbot,LE: Certificate needs renewal
+    Note over Certbot,LE: Certificate needs renewal
             Certbot->>LE: Request certificate renewal
             LE->>Certbot: Send HTTP-01 challenge
             Certbot->>Volume: Write challenge file
@@ -263,9 +263,9 @@ sequenceDiagram
             Nginx-->>LE: Challenge response
             LE->>Certbot: Send new certificate
             Certbot->>Volume: Write new certificate
- Note over Volume: Update archive/fullchain2.pem Update live/ symlink
+    Note over Volume: Update archive/fullchain2.pem Update live/ symlink
         else More than 30 days remaining
- Note over Certbot: Skip renewal (not due yet)
+    Note over Certbot: Skip renewal (not due yet)
         end
     end
 
@@ -274,7 +274,7 @@ sequenceDiagram
     Script->>Nginx: Test config (nginx -t)
     Nginx-->>Script: Config OK
     Script->>Nginx: Reload (nginx -s reload)
- Note over Nginx: Now using renewed certificate (if any)
+    Note over Nginx: Now using renewed certificate (if any)
 
     Script-->>Cron: Renewal process finished
 ```
@@ -433,23 +433,23 @@ sequenceDiagram
     participant N as Nginx Server
     participant DNS as DNS Server
 
- Note over C,LE: Phase 1: Challenge Request
+    Note over C,LE: Phase 1: Challenge Request
 
     C->>LE: POST /acme/new-authz {domain: "crudibase.codingtech.info"}
     LE->>DNS: Verify domain is valid
     DNS-->>LE: Domain exists
     LE->>C: 201 Created {challenges: [{type: "http-01", token: "ABC123", uri: "..."}]}
 
- Note over C,FS: Phase 2: Challenge Preparation
+    Note over C,FS: Phase 2: Challenge Preparation
 
     C->>C: Compute key authorization token + account key thumbprint
     C->>FS: Write file /var/www/certbot/.well-known/acme-challenge/ABC123
- Note over FS: File contains: ABC123.XYZ789DEF
+    Note over FS: File contains: ABC123.XYZ789DEF
 
     C->>LE: POST /acme/challenge/{id} {} (ready for validation)
     LE-->>C: 200 OK (validation pending)
 
- Note over LE,N: Phase 3: Challenge Validation
+    Note over LE,N: Phase 3: Challenge Validation
 
     LE->>DNS: Resolve crudibase.codingtech.info
     DNS-->>LE: IP: 123.45.67.89
@@ -463,7 +463,7 @@ sequenceDiagram
 
     alt Validation Successful
         LE->>C: Challenge status: valid
- Note over C,LE: Phase 4: Certificate Issuance
+    Note over C,LE: Phase 4: Certificate Issuance
         C->>LE: POST /acme/finalize {csr: "..."}
         LE->>LE: Generate certificate
         LE->>C: 200 OK {certificate: "..."}

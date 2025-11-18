@@ -49,7 +49,7 @@ sequenceDiagram
     participant Backend as Backend Service (Node.js)
     participant Frontend as Frontend Service (Nginx/React)
 
- Note over Client: User navigates to https://crudibase.codingtech.info/api/users
+    Note over Client: User navigates to https://crudibase.codingtech.info/api/users
 
     Client->>DNS: Resolve crudibase.codingtech.info
     DNS-->>Client: IP: 123.45.67.89
@@ -57,15 +57,15 @@ sequenceDiagram
     Client->>SSLProxy: TCP SYN (port 443)
     SSLProxy-->>Client: TCP SYN-ACK
     Client->>SSLProxy: TCP ACK
- Note over Client,SSLProxy: TCP Connection Established
+    Note over Client,SSLProxy: TCP Connection Established
 
     Client->>SSLProxy: TLS ClientHello
- Note over SSLProxy: Select certificate for crudibase.codingtech.info
+    Note over SSLProxy: Select certificate for crudibase.codingtech.info
     SSLProxy-->>Client: TLS ServerHello + Certificate
     Client->>Client: Validate certificate
     Client->>SSLProxy: TLS Finished
     SSLProxy-->>Client: TLS Finished
- Note over Client,SSLProxy: TLS 1.3 Connection Established
+    Note over Client,SSLProxy: TLS 1.3 Connection Established
 
     Client->>SSLProxy: Encrypted HTTP GET /api/users HTTP/2
     SSLProxy->>SSLProxy: Decrypt request
@@ -73,7 +73,7 @@ sequenceDiagram
     SSLProxy->>SSLProxy: Parse Path /api/users
     SSLProxy->>SSLProxy: Match server block
 
- Note over SSLProxy: Route to backend based on /api/ path
+    Note over SSLProxy: Route to backend based on /api/ path
 
     SSLProxy->>Backend: HTTP GET / with headers
     Backend->>Backend: Process request Query database
@@ -198,14 +198,14 @@ sequenceDiagram
     participant SSLProxy as SSL Proxy (Nginx)
     participant Frontend as Frontend Container (Nginx)
 
- Note over Browser: User requests https://crudibase.codingtech.info/
+    Note over Browser: User requests https://crudibase.codingtech.info/
 
     Browser->>SSLProxy: GET / with Host: crudibase.codingtech.info
     SSLProxy->>SSLProxy: Decrypt HTTPS
     SSLProxy->>SSLProxy: Match HTTPS server block
     SSLProxy->>SSLProxy: Match location / {}
 
- Note over SSLProxy: proxy_pass http://crudibase-frontend:3000
+    Note over SSLProxy: proxy_pass http://crudibase-frontend:3000
 
     SSLProxy->>Frontend: GET / to crudibase-frontend:3000
     Frontend->>Frontend: Serve index.html
@@ -260,7 +260,7 @@ sequenceDiagram
     participant Backend as Backend API (Node.js)
     participant DB as PostgreSQL Database
 
- Note over Browser: React app makes API call
+    Note over Browser: React app makes API call
 
     Browser->>SSLProxy: OPTIONS /api/users (CORS preflight)
 
@@ -268,7 +268,7 @@ sequenceDiagram
     SSLProxy->>SSLProxy: Match /api/ location block
     SSLProxy->>SSLProxy: Check request method = OPTIONS
 
- Note over SSLProxy: CORS preflight: return 204
+    Note over SSLProxy: CORS preflight: return 204
 
     SSLProxy-->>Browser: 204 No Content + CORS headers
 
@@ -279,7 +279,7 @@ sequenceDiagram
     SSLProxy->>SSLProxy: Decrypt HTTPS
     SSLProxy->>SSLProxy: Match /api/ location
 
- Note over SSLProxy: proxy_pass http://crudibase-backend:3001/
+    Note over SSLProxy: proxy_pass http://crudibase-backend:3001/
 
     SSLProxy->>Backend: GET /users + headers
 

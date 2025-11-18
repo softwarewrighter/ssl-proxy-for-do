@@ -224,7 +224,7 @@ sequenceDiagram
     participant Backend as crudibase-backend
 
     Nginx->>DNS: Resolve "crudibase-backend"
- Note over DNS: Lookup in crudibase-network
+    Note over DNS: Lookup in crudibase-network
 
     DNS->>DNS: Find container with name "crudibase-backend"
     DNS-->>Nginx: IP: 172.18.0.4
