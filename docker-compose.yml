@@ -29,9 +29,9 @@ services:
       # Cruditrack configuration
       - ENABLE_CRUDITRACK=true
       - CRUDITRACK_BACKEND_HOST=cruditrack-backend
-      - CRUDITRACK_BACKEND_PORT=3101
+      - CRUDITRACK_BACKEND_PORT=3001
       - CRUDITRACK_FRONTEND_HOST=cruditrack-frontend
-      - CRUDITRACK_FRONTEND_PORT=3100
+      - CRUDITRACK_FRONTEND_PORT=3000
     volumes:
       # Persist SSL certificates
       - letsencrypt:/etc/letsencrypt
