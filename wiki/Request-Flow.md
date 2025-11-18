@@ -45,11 +45,11 @@ graph LR
 sequenceDiagram
     participant Client as Client Browser
     participant DNS as DNS Server
-    participant SSLProxy as SSL Proxy<br/>(Nginx)
-    participant Backend as Backend Service<br/>(Node.js)
-    participant Frontend as Frontend Service<br/>(Nginx/React)
+    participant SSLProxy as SSL Proxy (Nginx)
+    participant Backend as Backend Service (Node.js)
+    participant Frontend as Frontend Service (Nginx/React)
 
-    Note over Client: User navigates to<br/>https://crudibase.codingtech.info/api/users
+    Note over Client: User navigates to https://crudibase.codingtech.info/api/users
 
     Client->>DNS: Resolve crudibase.codingtech.info
     DNS-->>Client: IP: 123.45.67.89
@@ -60,28 +60,28 @@ sequenceDiagram
     Note over Client,SSLProxy: TCP Connection Established
 
     Client->>SSLProxy: TLS ClientHello
-    Note over SSLProxy: Select certificate for<br/>crudibase.codingtech.info
+    Note over SSLProxy: Select certificate for crudibase.codingtech.info
     SSLProxy-->>Client: TLS ServerHello + Certificate
     Client->>Client: Validate certificate
     Client->>SSLProxy: TLS Finished
     SSLProxy-->>Client: TLS Finished
     Note over Client,SSLProxy: TLS 1.3 Connection Established
 
-    Client->>SSLProxy: Encrypted HTTP Request<br/>GET /api/users HTTP/2
+    Client->>SSLProxy: Encrypted HTTP GET /api/users HTTP/2
     SSLProxy->>SSLProxy: Decrypt request
-    SSLProxy->>SSLProxy: Parse Host header:<br/>crudibase.codingtech.info
-    SSLProxy->>SSLProxy: Parse Path: /api/users
+    SSLProxy->>SSLProxy: Parse Host header crudibase.codingtech.info
+    SSLProxy->>SSLProxy: Parse Path /api/users
     SSLProxy->>SSLProxy: Match server block
 
     Note over SSLProxy: Route to backend based on /api/ path
 
-    SSLProxy->>Backend: HTTP GET /<br/>Host: crudibase-backend:3001<br/>X-Real-IP: 1.2.3.4<br/>X-Forwarded-Proto: https
-    Backend->>Backend: Process request<br/>Query database, etc.
-    Backend-->>SSLProxy: HTTP 200 OK<br/>Content-Type: application/json<br/>{users: [...]}
+    SSLProxy->>Backend: HTTP GET / with headers
+    Backend->>Backend: Process request Query database
+    Backend-->>SSLProxy: HTTP 200 OK with JSON users data
 
-    SSLProxy->>SSLProxy: Add security headers:<br/>- HSTS<br/>- X-Frame-Options<br/>- X-Content-Type-Options
+    SSLProxy->>SSLProxy: Add security headers HSTS etc
     SSLProxy->>SSLProxy: Encrypt response
-    SSLProxy-->>Client: Encrypted HTTP Response<br/>HTTP/2 200 OK
+    SSLProxy-->>Client: Encrypted HTTP Response HTTP/2 200 OK
 
     Client->>Client: Decrypt response
     Client->>Client: Render data
@@ -145,7 +145,7 @@ X-XSS-Protection: 1; mode=block
 ```mermaid
 sequenceDiagram
     participant Client as Client Browser
-    participant SSLProxy as SSL Proxy<br/>(Nginx Port 80)
+    participant SSLProxy as SSL Proxy (Nginx Port 80)
 
     Note over Client: User navigates to<br/>http://crudibase.codingtech.info
 
@@ -195,36 +195,36 @@ server {
 ```mermaid
 sequenceDiagram
     participant Browser as Client Browser
-    participant SSLProxy as SSL Proxy<br/>(Nginx :443)
-    participant Frontend as Frontend Container<br/>(Nginx :3000)
+    participant SSLProxy as SSL Proxy (Nginx)
+    participant Frontend as Frontend Container (Nginx)
 
-    Note over Browser: User requests<br/>https://crudibase.codingtech.info/
+    Note over Browser: User requests https://crudibase.codingtech.info/
 
-    Browser->>SSLProxy: GET /<br/>Host: crudibase.codingtech.info
+    Browser->>SSLProxy: GET / with Host: crudibase.codingtech.info
     SSLProxy->>SSLProxy: Decrypt HTTPS
     SSLProxy->>SSLProxy: Match HTTPS server block
     SSLProxy->>SSLProxy: Match location / {}
 
     Note over SSLProxy: proxy_pass http://crudibase-frontend:3000
 
-    SSLProxy->>Frontend: GET /<br/>Host: crudibase-frontend:3000
+    SSLProxy->>Frontend: GET / to crudibase-frontend:3000
     Frontend->>Frontend: Serve index.html
-    Frontend-->>SSLProxy: 200 OK<br/>Content-Type: text/html<br/><html>...</html>
+    Frontend-->>SSLProxy: 200 OK (text/html)
 
     SSLProxy->>SSLProxy: Add security headers
     SSLProxy->>SSLProxy: Encrypt response
-    SSLProxy-->>Browser: 200 OK (HTTPS)<br/><html>...</html>
+    SSLProxy-->>Browser: 200 OK (HTTPS)
 
     Browser->>Browser: Parse HTML
-    Browser->>Browser: Find resource:<br/>/static/js/main.js
+    Browser->>Browser: Find resource /static/js/main.js
 
     Browser->>SSLProxy: GET /static/js/main.js
     SSLProxy->>Frontend: GET /static/js/main.js
     Frontend->>Frontend: Serve JS file
-    Frontend-->>SSLProxy: 200 OK<br/>Content-Type: application/javascript
-    SSLProxy-->>Browser: 200 OK (HTTPS)<br/>/* JavaScript code */
+    Frontend-->>SSLProxy: 200 OK (application/javascript)
+    SSLProxy-->>Browser: 200 OK (HTTPS)
 
-    Browser->>Browser: Execute JavaScript<br/>Initialize React app
+    Browser->>Browser: Execute JavaScript and Initialize React app
 ```
 
 ### Frontend Nginx Configuration
@@ -256,48 +256,48 @@ server {
 ```mermaid
 sequenceDiagram
     participant Browser as Client Browser
-    participant SSLProxy as SSL Proxy<br/>(Nginx :443)
-    participant Backend as Backend API<br/>(Node.js :3001)
+    participant SSLProxy as SSL Proxy (Nginx)
+    participant Backend as Backend API (Node.js)
     participant DB as PostgreSQL Database
 
-    Note over Browser: React app makes API call<br/>fetch('https://crudibase.codingtech.info/api/users')
+    Note over Browser: React app makes API call
 
-    Browser->>SSLProxy: OPTIONS /api/users<br/>Origin: https://crudibase.codingtech.info<br/>Access-Control-Request-Method: GET
+    Browser->>SSLProxy: OPTIONS /api/users (CORS preflight)
 
     SSLProxy->>SSLProxy: Decrypt HTTPS
     SSLProxy->>SSLProxy: Match /api/ location block
     SSLProxy->>SSLProxy: Check request method = OPTIONS
 
-    Note over SSLProxy: CORS preflight handling<br/>if ($request_method = 'OPTIONS') {<br/>  return 204;<br/>}
+    Note over SSLProxy: CORS preflight: return 204
 
-    SSLProxy-->>Browser: 204 No Content<br/>Access-Control-Allow-Origin: https://crudibase...<br/>Access-Control-Allow-Methods: GET, POST, PUT, DELETE<br/>Access-Control-Allow-Headers: Authorization, Content-Type<br/>Access-Control-Allow-Credentials: true
+    SSLProxy-->>Browser: 204 No Content + CORS headers
 
     Browser->>Browser: CORS check passed
 
-    Browser->>SSLProxy: GET /api/users<br/>Authorization: Bearer eyJhbGc...<br/>Origin: https://crudibase.codingtech.info
+    Browser->>SSLProxy: GET /api/users + Auth header
 
     SSLProxy->>SSLProxy: Decrypt HTTPS
     SSLProxy->>SSLProxy: Match /api/ location
 
     Note over SSLProxy: proxy_pass http://crudibase-backend:3001/
 
-    SSLProxy->>Backend: GET /users<br/>Host: crudibase-backend:3001<br/>Authorization: Bearer eyJhbGc...<br/>X-Real-IP: 203.0.113.42<br/>X-Forwarded-Proto: https
+    SSLProxy->>Backend: GET /users + headers
 
     Backend->>Backend: Validate JWT token
     Backend->>Backend: Parse request
     Backend->>DB: SELECT * FROM users;
-    DB-->>Backend: [{id: 1, name: "Alice"}, ...]
+    DB-->>Backend: Query results
 
     Backend->>Backend: Format JSON response
-    Backend-->>SSLProxy: 200 OK<br/>Content-Type: application/json<br/>[{id: 1, name: "Alice"}, ...]
+    Backend-->>SSLProxy: 200 OK + JSON data
 
-    SSLProxy->>SSLProxy: Add CORS headers:<br/>Access-Control-Allow-Origin: https://crudibase...<br/>Access-Control-Allow-Credentials: true
+    SSLProxy->>SSLProxy: Add CORS headers
     SSLProxy->>SSLProxy: Add security headers
     SSLProxy->>SSLProxy: Encrypt response
 
-    SSLProxy-->>Browser: 200 OK (HTTPS)<br/>[{id: 1, name: "Alice"}, ...]
+    SSLProxy-->>Browser: 200 OK (HTTPS) + JSON
 
-    Browser->>Browser: Process response<br/>Update UI
+    Browser->>Browser: Process response and Update UI
 ```
 
 ### API Path Rewriting
@@ -346,8 +346,8 @@ location /api/ {
 ```mermaid
 sequenceDiagram
     participant Client as Client Browser
-    participant SSLProxy as SSL Proxy<br/>(Nginx)
-    participant Backend as Backend Service<br/>(WebSocket Server)
+    participant SSLProxy as SSL Proxy (Nginx)
+    participant Backend as Backend Service (WebSocket Server)
 
     Note over Client: Client initiates WebSocket<br/>new WebSocket('wss://crudibase.../api/ws')
 
@@ -468,8 +468,8 @@ docker ps
 ```mermaid
 sequenceDiagram
     participant Client as Client Browser
-    participant SSLProxy as SSL Proxy<br/>(Nginx)
-    participant Backend as Backend Service<br/>(Down/Unreachable)
+    participant SSLProxy as SSL Proxy (Nginx)
+    participant Backend as Backend Service (Down/Unreachable)
 
     Client->>SSLProxy: GET /api/users HTTPS
 
@@ -493,7 +493,7 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant Client as Client Browser
-    participant SSLProxy as SSL Proxy<br/>(Nginx)
+    participant SSLProxy as SSL Proxy (Nginx)
     participant Frontend as Frontend Service
 
     Client->>SSLProxy: GET /nonexistent-page HTTPS

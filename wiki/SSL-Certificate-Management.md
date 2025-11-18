@@ -429,7 +429,7 @@ stateDiagram-v2
 sequenceDiagram
     participant C as Certbot Client
     participant LE as Let's Encrypt Server
-    participant FS as File System<br/>(/var/www/certbot)
+    participant FS as File System (/var/www/certbot)
     participant N as Nginx Server
     participant DNS as DNS Server
 
